@@ -1,0 +1,48 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.tomcawley:gradle-protobuf-plugin:0.2'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'gradleProtobufPlugin'
+
+// Point to your protobuf library for compilation of the generated files
+dependencies {
+    compile 'com.google.protobuf:protobuf-java:2.5.0'
+    compile 'com.google.guava:guava:15.0'
+    compile 'org.xerial.snappy:snappy-java:1.1.0.1'
+    testCompile 'junit:junit:4.11'
+}
+
+repositories {
+    mavenCentral()
+}
+
+protoBuf {
+    protoc {
+        'Mac OS X' {
+            path = "/usr/local/Cellar/protobuf/2.5.0/bin/protoc"
+        }
+    }
+
+    // Optional, defaults to 'src/main/proto'
+    sourceSets {
+        proto {
+            srcDir = 'src/main/proto'
+        }
+    }
+
+    lang {
+        java {
+            genDir = 'src/main/java'
+        }
+    }
+}
+
+compileJava.dependsOn compileProto
+clean.dependsOn cleanProto
